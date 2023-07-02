@@ -4,6 +4,7 @@ source('separate-j-points.R')
 source('triple-distributions.R')
 source('new-gains.R')
 source('boxplots.R')
+source('boxplots-tiers.R')
 
 # LOADING DATA
 
@@ -52,3 +53,5 @@ write.csv(s2p3, file='csv-files/S2P3_Detailed.csv')
 
 # Plotting boxplots for partials and mcq points and justification points only
 boxplot_partials(s1_grades, s2_grades, "S1-JMCQ", "S2-MCQ")
+boxplot_partials_tiers(s1_grades, s2_grades, "S1-JMCQ", "S2-MCQ")
+boxplot_partials_tiers_0_100(s1_grades, s2_grades, "S1-JMCQ", "S2-MCQ")
