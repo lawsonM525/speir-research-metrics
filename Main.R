@@ -3,6 +3,7 @@ source('partial-distributions.R')
 source('separate-j-points.R')
 source('triple-distributions.R')
 source('new-gains.R')
+source('boxplots.R')
 
 # LOADING DATA
 
@@ -19,12 +20,12 @@ s2p3 <-  read.csv("csv-files/CSC110-S23-Sec02-partial3-Anon.csv_clean.csv")
 
 
 # BASIC DENSITY PLOTS
-distributions(s1_grades, "Section_1_JMCQ", s1_grades$P1.After.Comments, 
-              s1_grades$P2.After.Comments, s1_grades$P3.After.Comments, 
-              s1_grades$Number.Grade)
-distributions(s2_grades, "Section_2_MCQ", s2_grades$P1.After.Comments, 
-              s2_grades$P2.After.Comments, s2_grades$P3.After.Comments, 
-              s2_grades$Number.Grade)
+# distributions(s1_grades, "Section_1_JMCQ", s1_grades$P1.After.Comments, 
+#               s1_grades$P2.After.Comments, s1_grades$P3.After.Comments, 
+#               s1_grades$Number.Grade)
+# distributions(s2_grades, "Section_2_MCQ", s2_grades$P1.After.Comments, 
+#               s2_grades$P2.After.Comments, s2_grades$P3.After.Comments, 
+#               s2_grades$Number.Grade)
 
 # Separating mcq points from justification points
 s1p1 <- separate(s1p1,'P1')
@@ -41,9 +42,13 @@ s2p3 <- separate(s2p3, 'P3')
 write.csv(s2p3, file='csv-files/S2P3_Detailed.csv')
 
 ##Plotting combined plots for MCQ only and justification only points
-triple_plot(s1p1, s1p2, s1p3, 'Section 1')
-triple_plot(s2p1, s2p2, s2p3, 'Section 2')
+# triple_plot(s1p1, s1p2, s1p3, 'Section 1')
+# triple_plot(s2p1, s2p2, s2p3, 'Section 2')
 
 ## Calculating bonuses
-calc_gains(s1_grades,'jmcq')
-calc_gains(s2_grades, 'mcq')
+# calc_gains(s1_grades,'jmcq')
+# calc_gains(s2_grades, 'mcq')
+
+
+# Plotting boxplots for partials and mcq points and justification points only
+boxplot_partials(s1_grades, s2_grades, "S1-JMCQ", "S2-MCQ")
