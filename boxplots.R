@@ -40,3 +40,41 @@ boxplot_partials <- function (section1, section2, section1name, section2name){
     ggsave(filename = paste0("plots/", partial, "_boxplots.png"), plot = combined_plot)
   }
 }
+
+boxplot_df <- function(df, dfname){
+  
+  # Convert all columns to numeric
+  df <- mutate_all(df, as.numeric)
+  
+  # Vector of column names
+  cols <- colnames(df)
+  
+  # Calculate the global minimum and maximum values across all columns
+  global_min <- min(sapply(df, min, na.rm = TRUE))
+  global_max <- max(sapply(df, max, na.rm = TRUE))
+  
+  # Initialize an empty list to store plots
+  plot_list <- list()
+  
+  # For each column
+  for (col in cols){
+    # Create a boxplot
+    p <- ggplot(df, aes_string(x = 1, y = col)) + 
+      geom_boxplot(outlier.shape = NA) +
+      geom_jitter(width = 0.1, alpha = 0.5, aes_string(y = col)) +
+      labs(title = paste0(dfname,"-", col), y = col) +
+      theme_economist() +
+      coord_cartesian(ylim = c(0,100))   # Set y-axis limits
+    
+    # Add the plot to the list
+    plot_list[[col]] <- p
+  }
+  
+  # Combine the boxplots
+  combined_plot <- do.call(grid.arrange, c(plot_list, ncol=2))
+  
+  # Save the combined plot as a PNG image
+  ggsave(filename = paste0("plots/", dfname, "_boxplots.png"),
+         plot = combined_plot)
+}
+

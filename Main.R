@@ -5,6 +5,7 @@ source('triple-distributions.R')
 source('new-gains.R')
 source('boxplots.R')
 source('boxplots-tiers.R')
+source('averages.R')
 
 # LOADING DATA
 
@@ -47,11 +48,26 @@ write.csv(s2p3, file='csv-files/S2P3_Detailed.csv')
 # triple_plot(s2p1, s2p2, s2p3, 'Section 2')
 
 ## Calculating bonuses
-# calc_gains(s1_grades,'jmcq')
-# calc_gains(s2_grades, 'mcq')
+s1_gains <- calc_gains(s1_grades,'jmcq')
+s2_gains <- calc_gains(s2_grades, 'mcq')
+
+boxplot_df(s1_gains, "s1_gains")
+boxplot_df(s2_gains, "s2_gains")
+
+compute_stats(s1_gains, c('p1.gain','p2.gain'), 's1_mcq_gains')
+compute_stats(s2_gains, c('p1.gain','p2.gain'), 's2_jmcq_gains')
 
 
 # Plotting boxplots for partials and mcq points and justification points only
 boxplot_partials(s1_grades, s2_grades, "S1-JMCQ", "S2-MCQ")
 boxplot_partials_tiers(s1_grades, s2_grades, "S1-JMCQ", "S2-MCQ")
 boxplot_partials_tiers_0_100(s1_grades, s2_grades, "S1-JMCQ", "S2-MCQ")
+
+compute_stats(s1_grades, 
+              c('P1.After.Comments','P2.After.Comments','P3.After.Comments',
+                'Number.Grade'),
+              's1_jmcq')
+compute_stats(s2_grades, 
+              c('P1.After.Comments','P2.After.Comments','P3.After.Comments',
+                'Number.Grade'),
+              's2_mcq')

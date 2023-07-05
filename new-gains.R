@@ -34,4 +34,6 @@ calc_gains <- function(section, sectionname){
     xlim(0,70)
   
   ggsave(paste0("plots/",sectionname,"_gains.png"), p)
+  
+  return(sec_bonus %>% select(p1.gain, p2.gain))
 }
