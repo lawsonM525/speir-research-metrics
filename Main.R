@@ -57,6 +57,13 @@ boxplot_df(s2_gains, "s2_gains")
 compute_stats(s1_gains, c('p1.gain','p2.gain'), 's1_mcq_gains')
 compute_stats(s2_gains, c('p1.gain','p2.gain'), 's2_jmcq_gains')
 
+t_test_result <- t.test(s1_gains$p2.gain, s2_gains$p2.gain)
+print(t_test_result)
+
+w_test_result <- wilcox.test(s1_gains$p1.gain, s2_gains$p1.gain, exact = FALSE)
+print(w_test_result)
+
+
 
 # Plotting boxplots for partials and mcq points and justification points only
 boxplot_partials(s1_grades, s2_grades, "S1-JMCQ", "S2-MCQ")
