@@ -42,16 +42,19 @@ clean_data <- function(df){
   # Apply the rename function to the columns
   df <- rename_func(df)
   
-  # Recode scale from strongly disagree to strongly agree
-  df <- df %>% mutate(across(where(is.factor),
-                             ~ as.numeric(recode(.,
-                                                 "Strongly disagree" = 1,
-                                                 "Somewhat disagree" = 2,
-                                                 "Neither agree nor disagree" = 3,
-                                                 "Somewhat agree" = 4,
-                                                 "Strongly agree" = 5))))
+  # Select only the columns named "Key" and all columns that start with "Question"
+  df <- df %>% select(Key, starts_with("Question"))
   
-  return(df)
+  # Recode scale from strongly disagree to strongly agree
+  df <- df %>% mutate(across(where(function(x) {
+    is.character(x) && any(x %in% c("Strongly disagree", "Somewhat disagree", 
+                                    "Neither agree nor disagree", "Somewhat agree", 
+                                    "Strongly agree"))
+  }), ~ as.numeric(recode(., "Strongly disagree" = 1,
+                          "Somewhat disagree" = 2,
+                          "Neither agree nor disagree" = 3,
+                          "Somewhat agree" = 4,
+                          "Strongly agree" = 5 ))))
 }
 
 

@@ -1,19 +1,33 @@
-separate <- function(partial, partialname){
+separate <- function(partial, partialname, n){
   
-  # Identify columns starting with 'q' or 'j'
-  q_columns <- grep("^q.*[abc]$", names(partial), value = TRUE)
-  j_columns <- grep("^j.*[abc]$", names(partial), value = TRUE)
-  
-  # Convert those columns to numeric
-  partial[q_columns] <- lapply(partial[q_columns], 
-                               function(x) as.numeric(as.character(x)))
-  partial[j_columns] <- lapply(partial[j_columns], 
-                               function(x) as.numeric(as.character(x)))
+  # Convert SC0 column to numeric
   partial$SC0 <- as.numeric(as.character(partial$SC0))
   
-  # Now calculate the row sums
-  partial$mcq_points <- rowSums(partial[q_columns], na.rm = TRUE)
-  partial$justification_points <- rowSums(partial[j_columns], na.rm = TRUE)
+  # Loop through each question number
+  for (i in 1:n) {
+    
+    # Identify columns for current question
+    q_columns <- grep(paste0("^q", i, ".*[abc]$"), names(partial), value = TRUE)
+    j_columns <- grep(paste0("^j", i, ".*[abc]$"), names(partial), value = TRUE)
+    
+    # Convert those columns to numeric
+    partial[q_columns] <- lapply(partial[q_columns], 
+                                 function(x) as.numeric(as.character(x)))
+    partial[j_columns] <- lapply(partial[j_columns], 
+                                 function(x) as.numeric(as.character(x)))
+    
+    # Calculate the row sums for current question
+    partial[paste0("mcq_", i)] <- rowSums(partial[q_columns], na.rm = TRUE)
+    partial[paste0("just_", i)] <- rowSums(partial[j_columns], na.rm = TRUE)
+  }
+  
+  # Calculate the total mcq and justification points
+  partial$mcq_points <- rowSums(partial[grep("^mcq_.*$", names(partial))], 
+                                na.rm = TRUE)
+  partial$justification_points <- rowSums(partial[grep("^just_.*$", 
+                                                       names(partial))], 
+                                          na.rm = TRUE)
+  
   
   if(partialname =="P3"){
     partial$mcq_points <- (partial$mcq_points/30)*40
@@ -25,10 +39,5 @@ separate <- function(partial, partialname){
   
   # Return new df
   return(partial)
-  
-  # partial$j_gain <- partial$mcq_points - partial$justification_points
-  # ^ wrong calculation
-  # partial$j_gain <- ((partial$SC0 - partial$mcq_points)/mcq_points) * 100
-  # ^ New calculation
   
 }

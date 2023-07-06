@@ -30,17 +30,17 @@ s2p3 <-  read.csv("csv-files/CSC110-S23-Sec02-partial3-Anon.csv_clean.csv")
 #               s2_grades$Number.Grade)
 
 # Separating mcq points from justification points
-s1p1 <- separate(s1p1,'P1')
+s1p1 <- separate(s1p1,'P1', 8)
 write.csv(s1p1, file='csv-files/S1P1_Detailed.csv')
-s1p2 <- separate(s1p2, 'P2')
+s1p2 <- separate(s1p2, 'P2', 8)
 write.csv(s1p2, file='csv-files/S1P2_Detailed.csv')
-s1p3 <- separate(s1p3, 'P3')
+s1p3 <- separate(s1p3, 'P3', 6)
 write.csv(s1p3, file='csv-files/S1P3_Detailed.csv')
-s2p1 <- separate(s2p1, 'P1')
+s2p1 <- separate(s2p1, 'P1', 8)
 write.csv(s2p1, file='csv-files/S2P1_Detailed.csv')
-s2p2 <- separate(s2p2, 'P2')
+s2p2 <- separate(s2p2, 'P2', 8)
 write.csv(s2p2, file='csv-files/S2P2_Detailed.csv')
-s2p3 <- separate(s2p3, 'P3')
+s2p3 <- separate(s2p3, 'P3', 6)
 write.csv(s2p3, file='csv-files/S2P3_Detailed.csv')
 
 ##Plotting combined plots for MCQ only and justification only points

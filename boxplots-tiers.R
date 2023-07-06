@@ -1,3 +1,17 @@
+library(ggplot2)
+library(ggthemes)
+library(dplyr)
+library(gridExtra)
+
+# Function to assign tiers
+assign_tiers <- function(x){
+  # Compute the quantiles
+  qs <- quantile(x, probs=c(1/3, 2/3), na.rm = TRUE)
+  # Assign tiers based on quantiles
+  cut(x, breaks=c(-Inf, qs, Inf), labels=c("C", "B", "A"))
+}
+
+
 boxplot_partials_tiers <- function (section1, section2, section1name, section2name){
   # Vector of column names
   partials <- c('P1.After.Comments', 'P2.After.Comments',
