@@ -50,9 +50,9 @@ clean_data <- function(df){
 
 # Apply the cleaning function to both surveys
 pre_survey <- clean_data(pre_survey)
-write.csv(pre_survey, 'S23_Pre_Survey_Cleaned.csv')
+write.csv(pre_survey, 'csv-files/S23_Pre_Survey_Cleaned.csv')
 post_survey <- clean_data(post_survey)
-write.csv(post_survey, 'S23_Post_Survey_Cleaned.csv')
+write.csv(post_survey, 'csv-files/S23_Post_Survey_Cleaned.csv')
 
 ## Remove section 3 responses in both surveys
 pre_survey <- pre_survey %>% filter(section != 3)
