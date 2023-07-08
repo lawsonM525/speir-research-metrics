@@ -78,3 +78,4 @@ compute_stats(s2_grades,
               c('P1.After.Comments','P2.After.Comments','P3.After.Comments',
                 'Number.Grade'),
               's2_mcq')
+
