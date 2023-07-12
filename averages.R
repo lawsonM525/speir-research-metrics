@@ -18,12 +18,21 @@ compute_stats <- function(df, col_vector, filename){
     median_val <- median(df[[col]], na.rm = TRUE)
     sd_val <- sd(df[[col]], na.rm = TRUE)
     
-    # Perform Shapiro-Wilk test for normality
-    shapiro_test <- shapiro.test(df[[col]])
-    p_val <- shapiro_test$p.value
+    # Initialize p-value and is_normal variables
+    p_val <- NA
+    is_normal <- "Not enough data"
     
-    # Check if p-value is less than 0.05
-    is_normal <- ifelse(p_val < 0.05, "Not Normal", "Normal")
+    # Remove NA values from the column
+    column_data <- na.omit(df[[col]])
+    
+    # Perform Shapiro-Wilk test for normality only if there are enough non-NA values
+    if(length(column_data) >= 3 && length(column_data) <= 5000) {
+      shapiro_test <- shapiro.test(column_data)
+      p_val <- shapiro_test$p.value
+      
+      # Check if p-value is less than 0.05
+      is_normal <- ifelse(p_val < 0.05, "Not Normal", "Normal")
+    }
     
     # Add results to the data frame
     results <- rbind(results, data.frame(Column = col, Mean = mean_val,

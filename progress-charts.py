@@ -226,7 +226,7 @@ def points_combine():
 # Plot partials for each section
 partial_charts('P1.After.Comments','P2.After.Comments','P3.After.Comments',
 'P1','P2','P3','Pi')
-partial_charts('P1.Real','P2.Real','P3.Real',
+partial_charts('P1.Real','P2.Real','P3.Real', 
 'P1raw','P2raw','P3raw','Piraw')
 partial_charts('P1.New','P2.New','P3.New',
 'P1+','P2+','P3+','Pi+')
