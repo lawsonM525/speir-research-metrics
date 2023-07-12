@@ -9,10 +9,16 @@ compute_stats <- function(df, col_vector, filename){
                         Median = numeric(),
                         StdDev = numeric(),
                         P_Value = numeric(),
-                        Normal = character())
+                        Normal = character(),
+                        Wilcoxon_P_Value = numeric()) # Added column for Wilcoxon rank-sum test P-value
   
   # For each column
   for (col in col_vector){
+    # Check if the column is numeric, if not convert it to numeric
+    if(!is.numeric(df[[col]])){
+      df[[col]] <- as.numeric(as.character(df[[col]]))
+    }
+    
     # Compute mean and median
     mean_val <- mean(df[[col]], na.rm = TRUE)
     median_val <- median(df[[col]], na.rm = TRUE)
@@ -37,7 +43,23 @@ compute_stats <- function(df, col_vector, filename){
     # Add results to the data frame
     results <- rbind(results, data.frame(Column = col, Mean = mean_val,
                                          Median = median_val, StdDev = sd_val,
-                                         P_Value = p_val, Normal = is_normal))
+                                         P_Value = p_val, Normal = is_normal,
+                                         Wilcoxon_P_Value = NA)) # Default to NA for Wilcoxon P-value
+  }
+  
+  # If there are exactly two columns in col_vector, perform the Wilcoxon rank-sum test
+  if(length(col_vector) == 2){
+    col1_data <- na.omit(df[[col_vector[1]]])
+    col2_data <- na.omit(df[[col_vector[2]]])
+    
+    # Check if there are sufficient non-missing observations
+    if(length(col1_data) > 1 && length(col2_data) > 1){
+      wilcox_test <- wilcox.test(col1_data, col2_data)
+      wilcox_p_val <- wilcox_test$p.value
+      
+      # Add Wilcoxon test p-value to the results data frame
+      results$Wilcoxon_P_Value <- ifelse(is.na(results$Wilcoxon_P_Value), wilcox_p_val, results$Wilcoxon_P_Value)
+    }
   }
   
   # Write results to a csv file
@@ -45,3 +67,4 @@ compute_stats <- function(df, col_vector, filename){
   
   return(results)
 }
+
