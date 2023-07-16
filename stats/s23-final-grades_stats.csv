@@ -1,0 +1,3 @@
+"Column","Mean","Median","StdDev","P_Value","Normal","Wilcoxon_P_Value"
+"jmcq-final-grades",87.65,90.95,8.79803073577185,0.00662870867457682,"Not Normal",0.700650036888123
+"mcq-final-grades",89.0866666666667,91.85,7.35933530231868,0.0028605427317609,"Not Normal",0.700650036888123
