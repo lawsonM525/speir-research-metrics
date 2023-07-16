@@ -5,10 +5,9 @@ library(gridExtra)
 
 # Function to assign tiers
 assign_tiers <- function(x){
-  # Compute the quantiles
-  qs <- quantile(x, probs=c(1/3, 2/3), na.rm = TRUE)
-  # Assign tiers based on quantiles
-  cut(x, breaks=c(-Inf, qs, Inf), labels=c("C", "B", "A"))
+  range_x <- range(x, na.rm = TRUE)
+  breaks <- seq(from = range_x[1], to = range_x[2], length.out = 4)
+  cut(x, breaks = breaks, labels = c("C", "B", "A"), include.lowest = TRUE)
 }
 
 

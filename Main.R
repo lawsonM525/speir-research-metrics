@@ -7,7 +7,6 @@ source('boxplots.R')
 source('boxplots-tiers.R')
 source('averages.R')
 library(RColorBrewer)
-library(dplyr)
 library(tidyverse)
 
 # LOADING DATA
@@ -39,9 +38,9 @@ s2p3b <- calc_tot_pts(s2p3b)
 
 ## Scaling points to percent
 s1p3a$score <- (s1p3a$total_points/40)*100
-s1p3b$score <- (s1p3a$total_points/20)*100
-s2p3a$score <- (s1p3a$total_points/20)*100
-s2p3b$score <- (s1p3a$total_points/10)*100
+s1p3b$score <- (s1p3b$total_points/20)*100
+s2p3a$score <- (s2p3a$total_points/20)*100
+s2p3b$score <- (s2p3b$total_points/10)*100
 
 
 
@@ -155,23 +154,49 @@ s2p3a$tier <- assign_tiers(s2p3a$score)
 s2p3b$tier <- assign_tiers(s2p3b$score)
 
 
+### Computing and Plotting Tier Counts
+# Create new data frames with only 'source' and 'tier' columns
+df_s1p1 <- data.frame(source = "s1p1", tier = s1p1$tier)
+df_s1p2 <- data.frame(source = "s1p2", tier = s1p2$tier)
+df_s1p3a <- data.frame(source = "s1p3a", tier = s1p3a$tier)
+df_s1p3b <- data.frame(source = "s1p3b", tier = s1p3b$tier)
+df_s2p1 <- data.frame(source = "s2p1", tier = s2p1$tier)
+df_s2p2 <- data.frame(source = "s2p2", tier = s2p2$tier)
+df_s2p3a <- data.frame(source = "s2p3a", tier = s2p3a$tier)
+df_s2p3b <- data.frame(source = "s2p3b", tier = s2p3b$tier)
+
 # Combine the data frames
-combined <- bind_rows(
-  mutate(s1p1, period = "P1"),
-  mutate(s1p2, period = "P2"),
-  mutate(s1p3a, period = "P3a"),
-  mutate(s1p3b, period = "P3b"),
-  mutate(s2p1, period = "P1"),
-  mutate(s2p2, period = "P2"),
-  mutate(s2p3a, period = "P3a"),
-  mutate(s2p3b, period = "P3b")
-)
+combined <- bind_rows(df_s1p1, df_s1p2, df_s1p3a, df_s1p3b, df_s2p1, df_s2p2, df_s2p3a, df_s2p3b)
 
-# Create tier summary table
-summary_table <- combined %>% 
-  group_by(period, tier) %>%
-  summarise(n = n(), .groups = 'drop') %>%
-  pivot_wider(names_from = period, values_from = n, values_fill = 0) %>%
-  arrange(desc(tier))
+# Compute the table
+tier_table <- table(combined$source, combined$tier)
+tier_df <- as.data.frame.matrix(tier_table)
+write.csv(tier_df, "tier_table.csv")
 
-write.csv(summary_table, file='stats/tiers_summary.csv')
+
+### Compute stats for each tier's scores in each partial
+
+#P1
+compute_stats_vec(list(s1p1$SC0[s1p1$tier == "A"], s2p1$SC0[s2p1$tier == "A"]), c("jmcq-p1-tierA","mcq-p1-tierA"),"p1-tierA")
+compute_stats_vec(list(s1p1$SC0[s1p1$tier == "B"], s2p1$SC0[s2p1$tier == "B"]), c("jmcq-p1-tierB","mcq-p1-tierB"),"p1-tierB")
+compute_stats_vec(list(s1p1$SC0[s1p1$tier == "C"], s2p1$SC0[s2p1$tier == "C"]), c("jmcq-p1-tierC","mcq-p1-tierC"),"p1-tierC")
+
+#P2
+compute_stats_vec(list(s1p2$SC0[s1p2$tier == "A"], s2p2$SC0[s2p2$tier == "A"]), c("jmcq-p2-tierA","mcq-p2-tierA"),"p2-tierA")
+compute_stats_vec(list(s1p2$SC0[s1p2$tier == "B"], s2p2$SC0[s2p2$tier == "B"]), c("jmcq-p2-tierB","mcq-p2-tierB"),"p2-tierB")
+compute_stats_vec(list(s1p2$SC0[s1p2$tier == "C"], s2p2$SC0[s2p2$tier == "C"]), c("jmcq-p2-tierC","mcq-p2-tierC"),"p2-tierC")
+
+#P3a
+compute_stats_vec(list(s1p3a$score[s1p3a$tier == "A"], s2p3a$score[s2p3a$tier == "A"]), c("jmcq-p3a-tierA","mcq-p3a-tierA"),"p3a-tierA")
+compute_stats_vec(list(s1p3a$score[s1p3a$tier == "B"], s2p3a$score[s2p3a$tier == "B"]), c("jmcq-p3a-tierB","mcq-p3a-tierB"),"p3a-tierB")
+compute_stats_vec(list(s1p3a$score[s1p3a$tier == "C"], s2p3a$score[s2p3a$tier == "C"]), c("jmcq-p3a-tierC","mcq-p3a-tierC"),"p3a-tierC")
+
+#P3b
+compute_stats_vec(list(s1p3b$score[s1p3b$tier == "A"], s2p3b$score[s2p3b$tier == "A"]), c("jmcq-p3b-tierA","mcq-p3b-tierA"),"p3b-tierA")
+compute_stats_vec(list(s1p3b$score[s1p3b$tier == "B"], s2p3b$score[s2p3b$tier == "B"]), c("jmcq-p3b-tierB","mcq-p3b-tierB"),"p3b-tierB")
+compute_stats_vec(list(s1p3b$score[s1p3b$tier == "C"], s2p3b$score[s2p3b$tier == "C"]), c("jmcq-p3b-tierC","mcq-p3b-tierC"),"p3b-tierC")
+
+
+
+
+
