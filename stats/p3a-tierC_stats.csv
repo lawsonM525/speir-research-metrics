@@ -1,0 +1,3 @@
+"Column","Mean","Median","StdDev","P_Value","Normal","Wilcoxon_P_Value"
+"jmcq-p3a-tierC",NA,NA,NA,NA,"Not enough data",NA
+"mcq-p3a-tierC",10,10,10.9544511501033,0.00403932851745828,"Not Normal",NA

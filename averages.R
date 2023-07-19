@@ -100,11 +100,19 @@ compute_stats_vec <- function(vec_list, col_names, filename){
     
     # Perform Shapiro-Wilk test for normality only if there are enough non-NA values
     if(length(vec_data) >= 3 && length(vec_data) <= 5000) {
-      shapiro_test <- shapiro.test(vec_data)
-      p_val <- shapiro_test$p.value
+      tryCatch(
+        {
+          shapiro_test <- shapiro.test(vec_data)
+          p_val <- shapiro_test$p.value
       
-      # Check if p-value is less than 0.05
-      is_normal <- ifelse(p_val < 0.05, "Not Normal", "Normal")
+          # Check if p-value is less than 0.05
+          is_normal <- ifelse(p_val < 0.05, "Not Normal", "Normal")
+        }, 
+        error = function(e) {
+          p_val <- NA
+          is_normal <- NA
+        }
+      )
     }
     
     # Add results to the data frame

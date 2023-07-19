@@ -1,0 +1,3 @@
+"Column","Mean","Median","StdDev","P_Value","Normal","Wilcoxon_P_Value"
+"jmcq-p3b-tierA",87.0833333333333,85,10.7573090022411,0.0151287845684715,"Not Normal",0.0024307707972153
+"mcq-p3b-tierA",100,100,0,NA,"Not enough data",0.0024307707972153

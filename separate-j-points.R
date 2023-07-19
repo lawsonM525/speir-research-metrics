@@ -50,7 +50,11 @@ separate_comments <- function(grades_df, partial, partialname, n){
   partial$SC0 <- as.numeric(as.character(partial$SC0))
   
   # Create a data frame to hold comments, aligned to 'partial' data frame
-  aligned_comments <- grades_df[match(partial$key, grades_df$key), paste0(partialname, ".Comments")]
+  aligned_comments <- as.numeric(grades_df[match(partial$key, grades_df$key), paste0(partialname, ".Comments")])
+  
+  # Convert comments to numeric and handle NA values
+  aligned_comments_vector <- as.numeric(as.character(aligned_comments[[1]]))
+  aligned_comments_vector[is.na(aligned_comments_vector)] <- 0
   
   # Loop through each question number
   for (i in 1:n) {
@@ -69,10 +73,10 @@ separate_comments <- function(grades_df, partial, partialname, n){
   }
   
   # Add comments to justification points
-  partial$justification_points <- rowSums(partial[grep("^just_.*$", names(partial))], na.rm = TRUE) + aligned_comments
+  partial$justification_points <- ((rowSums(partial[grep("^just_.*$", names(partial))], na.rm = TRUE) + aligned_comments_vector)/(n*5))*100
   
   # Calculate the total mcq points
-  partial$mcq_points <- rowSums(partial[grep("^mcq_.*$", names(partial))], na.rm = TRUE)
+  partial$mcq_points <- (rowSums(partial[grep("^mcq_.*$", names(partial))], na.rm = TRUE)/(n*5))*100
   
   if(partialname =="P3"){
     partial$mcq_points <- (partial$mcq_points/30)*40
@@ -81,12 +85,17 @@ separate_comments <- function(grades_df, partial, partialname, n){
   }
   
   partial$j_gain <- ((partial$SC0 - partial$mcq_points)/partial$mcq_points) * 100
+  partial$j_gain[is.infinite(partial$j_gain)] <- NA
+  partial$j_cons <- partial$justification_points - partial$mcq_points
   
   # Return new df
   return(partial)
   
 }
 
+
+
+# USed to separate P3 into P3a and P3b
 separate_partials <- function(s1p3, s2p3){
   # Define columns that are common to both s1p3a and s1p3b
   common_cols <- c("X", "StartDate", "EndDate", "Progress", "Duration..in.seconds.", "Finished", 
@@ -95,7 +104,7 @@ separate_partials <- function(s1p3, s2p3){
   # Define additional columns for s1p3a (Q1-Q4)
   s1p3a_cols <- c(paste0("q", 1:4, "_total"), unlist(lapply(1:4, function(i) paste0("q", i, letters[1:3]))),
                   unlist(lapply(1:4, function(i) paste0("j", i, letters[1:3]))), unlist(lapply(1:4, function(i) paste0("c", i, letters[1:3]))),
-                  paste0("T", 1:4, "_First.Click:Click.Count"), paste0("mcq_", 1:4), paste0("just_", 1:4))
+                  paste0("T", 1:4, "_First.Click:Click.Count"), paste0("mcq_", 1:4), paste0("just_", 1:4), "SC0", "score_check")
   
   # Check if each column exists in the data frame, and only keep those that do
   s1p3a_cols <- s1p3a_cols[s1p3a_cols %in% colnames(s1p3)]
@@ -121,7 +130,7 @@ separate_partials <- function(s1p3, s2p3){
   # Define additional columns for s2p3a (Q1-Q4)
   s2p3a_cols <- c(paste0("q", 1:4, "_total"), unlist(lapply(1:4, function(i) paste0("q", i, letters[1:3]))),
                   unlist(lapply(1:4, function(i) paste0("c", i, letters[1:3]))),
-                  paste0("T", 1:4, "_First.Click:Click.Count"), paste0("mcq_", 1:4), paste0("just_", 1:4))
+                  paste0("T", 1:4, "_First.Click:Click.Count"), paste0("mcq_", 1:4), paste0("just_", 1:4), "SC0", "score_check")
   
   # Check if each column exists in the data frame, and only keep those that do
   s2p3a_cols <- s2p3a_cols[s2p3a_cols %in% colnames(s2p3)]

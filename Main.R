@@ -37,10 +37,10 @@ s2p3a <- calc_tot_pts(s2p3a)
 s2p3b <- calc_tot_pts(s2p3b)
 
 ## Scaling points to percent
-s1p3a$score <- (s1p3a$total_points/40)*100
-s1p3b$score <- (s1p3b$total_points/20)*100
-s2p3a$score <- (s2p3a$total_points/20)*100
-s2p3b$score <- (s2p3b$total_points/10)*100
+s1p3a$SC0 <- (s1p3a$total_points/40)*100
+s1p3b$SC0 <- (s1p3b$total_points/20)*100
+s2p3a$SC0 <- (s2p3a$total_points/20)*100
+s2p3b$SC0 <- (s2p3b$total_points/10)*100
 
 
 
@@ -57,18 +57,18 @@ s1p1 <- separate_comments(s1_grades, s1p1,'P1', 8)
 write.csv(s1p1, file='csv-files/S1P1_Detailed.csv')
 s1p2 <- separate_comments(s1_grades, s1p2, 'P2', 8)
 write.csv(s1p2, file='csv-files/S1P2_Detailed.csv')
-s1p3 <- separate_comments(s1_grades, s1p3, 'P3', 6)
+s1p3a <- separate_comments(s1_grades, s1p3a, 'P3', 6)
 write.csv(s1p3, file='csv-files/S1P3_Detailed.csv')
 s2p1 <- separate(s2p1, 'P1', 8)
 write.csv(s2p1, file='csv-files/S2P1_Detailed.csv')
 s2p2 <- separate(s2p2, 'P2', 8)
 write.csv(s2p2, file='csv-files/S2P2_Detailed.csv')
-s2p3 <- separate(s2p3, 'P3', 6)
+s2p3a <- separate(s2p3a, 'P3', 6)
 write.csv(s2p3, file='csv-files/S2P3_Detailed.csv')
 
 ##Plotting combined plots for MCQ only and justification only points
-triple_plot(s1p1, s1p2, s1p3, 'Section 1')
-triple_plot(s2p1, s2p2, s2p3, 'Section 2')
+triple_plot(s1p1, s1p2, s1p3a, 'Section 1')
+triple_plot(s2p1, s2p2, s2p3a, 'Section 2')
 
 ## Calculating bonuses
 s1_gains <- calc_gains(s1_grades,'jmcq')
@@ -80,12 +80,13 @@ boxplot_df(s2_gains, "s2_gains")
 compute_stats(s1_gains, c('p1.gain','p2.gain'), 's1_mcq_gains')
 compute_stats(s2_gains, c('p1.gain','p2.gain'), 's2_jmcq_gains')
 
-t_test_result <- t.test(s1_gains$p2.gain, s2_gains$p2.gain)
-print(t_test_result)
-
-w_test_result <- wilcox.test(s1_gains$p1.gain, s2_gains$p1.gain, exact = FALSE)
-print(w_test_result)
-
+# stats comparing j gain and j consitencies between pip2, p2p3, and p1p3
+compute_stats_vec(list(s1p1$j_gain, s1p2$j_gain), c("jmcq_p1_j_gain", "jmcq_p2_j_gain"), "p1_p2_j_gain")
+compute_stats_vec(list(s1p1$j_cons, s1p2$j_cons), c("jmcq_p1_j_cons", "jmcq_p2_j_cons"), "p1_p2_j_cons")
+compute_stats_vec(list(s1p1$j_gain, s1p3a$j_gain), c("jmcq_p1_j_gain", "jmcq_p3a_j_gain"), "p1_p3_j_gain")
+compute_stats_vec(list(s1p1$j_cons, s1p3a$j_cons), c("jmcq_p1_j_cons", "jmcq_p3a_j_cons"), "p1_p3_j_cons")
+compute_stats_vec(list(s1p2$j_gain, s1p3a$j_gain), c("jmcq_p2_j_gain", "jmcq_p3a_j_gain"), "p2_p3_j_gain")
+compute_stats_vec(list(s1p2$j_cons, s1p3a$j_cons), c("jmcq_p2_j_cons", "jmcq_p3a_j_cons"), "p2_p3_j_cons")
 
 
 # Plotting boxplots for partials and mcq points and justification points only
@@ -146,12 +147,12 @@ ggsave("plots/p3b-boxplot.png", p, width = 6, height = 4)
 ## SPlitting partials into tiers
 s1p1$tier <- assign_tiers(s1p1$SC0)
 s1p2$tier <- assign_tiers(s1p2$SC0)
-s1p3a$tier <- assign_tiers(s1p3a$score)
-s1p3b$tier <- assign_tiers(s1p3b$score)
+s1p3a$tier <- assign_tiers(s1p3a$SC0)
+s1p3b$tier <- assign_tiers(s1p3b$SC0)
 s2p1$tier <- assign_tiers(s2p1$SC0)
 s2p2$tier <- assign_tiers(s2p2$SC0)
-s2p3a$tier <- assign_tiers(s2p3a$score)
-s2p3b$tier <- assign_tiers(s2p3b$score)
+s2p3a$tier <- assign_tiers(s2p3a$SC0)
+s2p3b$tier <- assign_tiers(s2p3b$SC0)
 
 
 ### Computing and Plotting Tier Counts
@@ -187,16 +188,12 @@ compute_stats_vec(list(s1p2$SC0[s1p2$tier == "B"], s2p2$SC0[s2p2$tier == "B"]), 
 compute_stats_vec(list(s1p2$SC0[s1p2$tier == "C"], s2p2$SC0[s2p2$tier == "C"]), c("jmcq-p2-tierC","mcq-p2-tierC"),"p2-tierC")
 
 #P3a
-compute_stats_vec(list(s1p3a$score[s1p3a$tier == "A"], s2p3a$score[s2p3a$tier == "A"]), c("jmcq-p3a-tierA","mcq-p3a-tierA"),"p3a-tierA")
-compute_stats_vec(list(s1p3a$score[s1p3a$tier == "B"], s2p3a$score[s2p3a$tier == "B"]), c("jmcq-p3a-tierB","mcq-p3a-tierB"),"p3a-tierB")
-compute_stats_vec(list(s1p3a$score[s1p3a$tier == "C"], s2p3a$score[s2p3a$tier == "C"]), c("jmcq-p3a-tierC","mcq-p3a-tierC"),"p3a-tierC")
+compute_stats_vec(list(s1p3a$SC0[s1p3a$tier == "A"], s2p3a$SC0[s2p3a$tier == "A"]), c("jmcq-p3a-tierA","mcq-p3a-tierA"),"p3a-tierA")
+compute_stats_vec(list(s1p3a$SC0[s1p3a$tier == "B"], s2p3a$SC0[s2p3a$tier == "B"]), c("jmcq-p3a-tierB","mcq-p3a-tierB"),"p3a-tierB")
+compute_stats_vec(list(s1p3a$SC0[s1p3a$tier == "C"], s2p3a$SC0[s2p3a$tier == "C"]), c("jmcq-p3a-tierC","mcq-p3a-tierC"),"p3a-tierC")
 
 #P3b
-compute_stats_vec(list(s1p3b$score[s1p3b$tier == "A"], s2p3b$score[s2p3b$tier == "A"]), c("jmcq-p3b-tierA","mcq-p3b-tierA"),"p3b-tierA")
-compute_stats_vec(list(s1p3b$score[s1p3b$tier == "B"], s2p3b$score[s2p3b$tier == "B"]), c("jmcq-p3b-tierB","mcq-p3b-tierB"),"p3b-tierB")
-compute_stats_vec(list(s1p3b$score[s1p3b$tier == "C"], s2p3b$score[s2p3b$tier == "C"]), c("jmcq-p3b-tierC","mcq-p3b-tierC"),"p3b-tierC")
-
-
-
-
+compute_stats_vec(list(s1p3b$SC0[s1p3b$tier == "A"], s2p3b$SC0[s2p3b$tier == "A"]), c("jmcq-p3b-tierA","mcq-p3b-tierA"),"p3b-tierA")
+compute_stats_vec(list(s1p3b$SC0[s1p3b$tier == "B"], s2p3b$SC0[s2p3b$tier == "B"]), c("jmcq-p3b-tierB","mcq-p3b-tierB"),"p3b-tierB")
+compute_stats_vec(list(s1p3b$SC0[s1p3b$tier == "C"], s2p3b$SC0[s2p3b$tier == "C"]), c("jmcq-p3b-tierC","mcq-p3b-tierC"),"p3b-tierC")
 
