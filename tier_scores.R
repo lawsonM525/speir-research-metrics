@@ -10,13 +10,23 @@ tier_scores <- function(partial, tier){
     return(tier_scores)
 }
 
-## Calling tier scores function for each tier given a partial
-tiers_scores <- function(partial){
-    # Get scores for each tier
-    tierA <- tier_scores(partial, "A")
-    tierB <- tier_scores(partial, "B")
-    tierC <- tier_scores(partial, "C")
+# Return tier scores as a data frame
+tiers_scores <- function(partial) {
 
-    # Return the scores
-    return(list(tierA, tierB, tierC))
+  # Get scores for each tier
+  tierA <- tier_scores(partial, "A") 
+  tierB <- tier_scores(partial, "B")
+  tierC <- tier_scores(partial, "C")
+  
+  # Combine into single data frame
+  tiers_df <- rbind(tierA, tierB, tierC)
+  
+  # Add tier column
+  tiers_df$tier <- c(rep("A", nrow(tierA)), 
+                     rep("B", nrow(tierB)),
+                     rep("C", nrow(tierC)))
+                     
+  # Return data frame
+  return(tiers_df)
+  
 }

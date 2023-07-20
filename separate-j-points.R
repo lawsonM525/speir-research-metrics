@@ -35,7 +35,7 @@ separate <- function(partial, partialname, n){
     partial$SC0 <- (partial$SC0/60)*80
   }
   
-  partial$j_gain <- ((partial$SC0 - partial$mcq_points)/partial$mcq_points) * 100
+  partial$j_gain <- (((100*partial$SC0)/80 - (100*partial$mcq_points)/40)/((100/40)*partial$mcq_points)) * 100
   
   # Return new df
   return(partial)
@@ -74,19 +74,23 @@ separate_comments <- function(grades_df, partial, partialname, n){
   
   # Add comments to justification points
   partial$justification_points <- ((rowSums(partial[grep("^just_.*$", names(partial))], na.rm = TRUE) + aligned_comments_vector)/(n*5))*100
+  is.na(partial$justification_points) <- partial$justification_points == 0
   
   # Calculate the total mcq points
   partial$mcq_points <- (rowSums(partial[grep("^mcq_.*$", names(partial))], na.rm = TRUE)/(n*5))*100
+  is.na(partial$mcq_points) <- partial$mcq_points == 0
   
-  if(partialname =="P3"){
-    partial$mcq_points <- (partial$mcq_points/30)*40
-    partial$justification_points <- (partial$justification_points/30)*40
-    partial$SC0 <- (partial$SC0/60)*80
+  
+  if(partialname != "P3"){ 
+    partial$SC0 <- 100*(partial$SC0/80) 
   }
+  
+  is.na(partial$SC0) <- partial$SC0 == 0
   
   partial$j_gain <- ((partial$SC0 - partial$mcq_points)/partial$mcq_points) * 100
   partial$j_gain[is.infinite(partial$j_gain)] <- NA
   partial$j_cons <- partial$justification_points - partial$mcq_points
+  
   
   # Return new df
   return(partial)
