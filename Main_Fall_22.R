@@ -17,6 +17,8 @@ jmcq <- rbind(s2,s3)
 jmcq$P1.Score <- (jmcq$P1.Total/120)*100
 mcq <- s1
 mcq$P1.Score <- (mcq$P1.Total/120)*100
+s2$P1.Score <- 100*(s2$P1.Total/120)
+s3$P1.Score <- 100*(s3$P1.Total/120)
 
 # Density plots
 densities_single(jmcq, "JMCQ")
@@ -26,6 +28,7 @@ densities_single(mcq, "MCQ")
 compute_stats(jmcq, "P1.Score", "JMCQ Stats")
 compute_stats(mcq, "P1.Score", "MCQ Stats")
 compute_stats_vec(list(jmcq$P1.Score, mcq$P1.Score),c("jmcq_p1","mcq_p1"),"f22_p1")
+compute_stats_vec(list(s2$P1.Score, s3$P1.Score), c("s2_p1", "s3_p1"), "f22_jmcq_p1")
 
 # Boxplots
 boxplot_single(jmcq, mcq, "JMCQ", "MCQ")
@@ -66,7 +69,10 @@ write.csv(as.data.frame(tier_table), "f22_tiers.csv")
 f22_jmcq <- separate_f22(jmcq)
 compute_stats(f22_jmcq, "j_gain", "f22-j-gain")
 # compute_stats(f22_jmcq,"j-cons", "f22-j-cons")
-
+s2 <- separate_f22(s2)
+s3 <- separate_f22(s3)
+compute_stats_vec(list(s2$j_gain,s3$j_gain),c("s2_j_effect","s3_j_effect"),"f22-j-effect")
+boxplot_double(s2, "j_gain", s3, "j_gain", "f22_jmcq_p1")
 
 # Create plot dataframe
 plot_df <- data.frame(

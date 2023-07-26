@@ -80,6 +80,8 @@ separate_comments <- function(grades_df, partial, partialname, n){
   partial$mcq_points <- (rowSums(partial[grep("^mcq_.*$", names(partial))], na.rm = TRUE)/(n*5))*100
   is.na(partial$mcq_points) <- partial$mcq_points == 0
   
+  partial$SC0 <- partial$SC0 +aligned_comments_vector
+  
   
   if(partialname != "P3"){ 
     partial$SC0 <- 100*(partial$SC0/80) 
