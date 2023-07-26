@@ -1,4 +1,6 @@
-
+# Author: Michelle Lawson
+# Title: Analysis of Spring 2023 Grade Data
+# Last Updated: July 24, 2023
 
 
 # --- LOAD INTERNAL FUNCTIONS ---
