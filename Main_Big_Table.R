@@ -7,6 +7,10 @@
 library(dplyr)
 library(broom)
 
+#------------------
+# LOAD INTERNAL FILES
+source("averages.R")
+
 # -----------------
 # LOAD DATA
 s23s1p1 <- read.csv("csv-files/s23-cleaned - s1p1.csv")
@@ -176,4 +180,57 @@ students_summary <- students_summary %>%
 # Save summary table
 write.csv(students_summary, "big-summary.csv")
 
+
+# --------------------------
+# COMPARE STATS TO ANSWER QUESTIONS
+
+compute_stats_vec(list(
+  students$grade[students$semester == "F22" & students$section == 1], 
+  students$grade[students$semester == "F22" & (students$section == 2 | students$section == 3)]),
+  c("msec_22_grades","jsec_22_grades"),"q1")
+
+compute_stats_vec(list(
+  students$grade[students$semester == "S23" & students$section == 2], 
+  students$grade[students$semester == "S23" & (students$section == 1)]),
+  c("msec_23_grades","jsec_23_grades"),"q2")
+
+compute_stats_vec(list(
+  students$grade[students$semester == "F22" & students$section == 1], 
+  students$grade[students$semester == "S23" & (students$section == 2)]),
+  c("msec_22_grades","msec_23_grades"),"q3")
+
+compute_stats_vec(list(
+  students$grade[students$semester == "F22" & (students$section == 2 | students$section == 3)], 
+  students$grade[students$semester == "S23" & (students$section == 1)]),
+  c("jsec_22_grades","jsec_23_grades"),"q4")
+
+compute_stats_vec(list(
+  students$mcq.grade[students$semester == "F22" & students$section == 1], 
+  students$mcq.grade[students$semester == "F22" & (students$section == 2 | students$section == 3)]),
+  c("msec_22_mcq_grades","jsec_22_mcq_grades"),"q5")
+
+compute_stats_vec(list(
+  students$mcq.grade[students$semester == "S23" & students$section == 2], 
+  students$mcq.grade[students$semester == "S23" & (students$section == 1)]),
+  c("msec_23_mcq_grades","jsec_23_mcq_grades"),"q6")
+
+compute_stats_vec(list(
+  students$mcq.grade[students$semester == "F22" & (students$section == 2 | students$section == 3)], 
+  students$mcq.grade[students$semester == "S23" & (students$section == 1)]),
+  c("jsec_22_mcq_grades","jsec_23_mcq_grades"),"q7")
+
+compute_stats_vec(list(
+  students$j.grade[students$semester == "F22" & (students$section == 2 | students$section == 3)], 
+  students$j.grade[students$semester == "S23" & (students$section == 1)]),
+  c("jsec_22_j_grades","jsec_23_j_grades"),"q8")
+
+compute_stats_vec(list(
+  students$j.effect[students$semester == "F22" & (students$section == 2 | students$section == 3)], 
+  students$j.effect[students$semester == "S23" & (students$section == 1)]),
+  c("jsec_22_j_effect","jsec_23_j_effect"),"q9")
+
+compute_stats_vec(list(
+  students$p.gain[students$semester == "S23" & students$section == 2], 
+  students$p.gain[students$semester == "S23" & (students$section == 1)]),
+  c("msec_23_p_gain","jsec_23_p_gain"),"q10")
 
