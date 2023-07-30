@@ -25,6 +25,60 @@ f22s3p1 <- read.csv("csv-files/f22-cleaned - s3p1.csv")
 
 
 # -----------------
+# ASSIGN TIERS
+
+# Add grade.tier columns 
+s23s1p1 <- s23s1p1 %>%
+  mutate(grade.tier = cut(grade, breaks = quantile(grade, probs = 0:3/3), include.lowest = TRUE, labels = 3:1))
+s23s1p2 <- s23s1p2 %>%
+  mutate(grade.tier = cut(grade, breaks = quantile(grade, probs = 0:3/3), include.lowest = TRUE, labels = 3:1))
+s23s1p3 <- s23s1p3 %>%
+  mutate(grade.tier = cut(grade, breaks = quantile(grade, probs = 0:3/3), include.lowest = TRUE, labels = 3:1))
+s23s2p1 <- s23s2p1 %>%
+  mutate(grade.tier = cut(grade, breaks = quantile(grade, probs = 0:3/3), include.lowest = TRUE, labels = 3:1))
+s23s2p2 <- s23s2p2 %>%
+  mutate(grade.tier = cut(grade, breaks = quantile(grade, probs = 0:3/3), include.lowest = TRUE, labels = 3:1))
+s23s2p3 <- s23s2p3 %>%
+  mutate(grade.tier = cut(grade, breaks = quantile(grade, probs = 0:3/3), include.lowest = TRUE, labels = 3:1))
+f22s1p1 <- f22s1p1 %>%
+  mutate(grade.tier = cut(grade, breaks = quantile(grade, probs = 0:3/3), include.lowest = TRUE, labels = 3:1))
+f22s2p1 <- f22s2p1 %>%
+  mutate(grade.tier = cut(grade, breaks = quantile(grade, probs = 0:3/3), include.lowest = TRUE, labels = 3:1))
+f22s3p1 <- f22s3p1 %>%
+  mutate(grade.tier = cut(grade, breaks = quantile(grade, probs = 0:3/3), include.lowest = TRUE, labels = 3:1))
+
+# Add j.effect.tier columns
+s23s1p1 <- s23s1p1 %>%
+  mutate(j.effect.tier = cut(j.effect, breaks = quantile(j.effect, probs = 0:3/3), include.lowest = TRUE, labels = 3:1))
+s23s1p2 <- s23s1p2 %>%
+  mutate(j.effect.tier = cut(j.effect, breaks = quantile(j.effect, probs = 0:3/3), include.lowest = TRUE, labels = 3:1))
+s23s1p3 <- s23s1p3 %>%
+  mutate(j.effect.tier = cut(j.effect, breaks = quantile(j.effect, probs = 0:3/3), include.lowest = TRUE, labels = 3:1))
+s23s2p1 <- s23s2p1 %>%
+  mutate(j.effect.tier = NA)
+s23s2p2 <- s23s2p2 %>%
+  mutate(j.effect.tier = NA)
+s23s2p3 <- s23s2p3 %>%
+  mutate(j.effect.tier = NA)
+f22s1p1 <- f22s1p1 %>%
+  mutate(j.effect.tier = NA)
+f22s2p1 <- f22s2p1 %>%
+  mutate(j.effect.tier = cut(j.effect, breaks = quantile(j.effect, probs = 0:3/3), include.lowest = TRUE, labels = 3:1))
+f22s3p1 <- f22s3p1 %>%
+  mutate(j.effect.tier = cut(j.effect, breaks = quantile(j.effect, probs = 0:3/3), include.lowest = TRUE, labels = 3:1))
+
+# Add tier.avg columns
+s23s1p1$tier.avg <- (as.double(as.character(s23s1p1$grade.tier)) + as.double(as.character(s23s1p1$j.effect.tier)))/2
+s23s1p2$tier.avg <- (as.double(as.character(s23s1p2$grade.tier)) + as.double(as.character(s23s1p2$j.effect.tier)))/2
+s23s1p3$tier.avg <- (as.double(as.character(s23s1p3$grade.tier)) + as.double(as.character(s23s1p3$j.effect.tier)))/2
+s23s2p1$tier.avg <- s23s2p1$grade.tier
+s23s2p2$tier.avg <- s23s2p2$grade.tier
+s23s2p3$tier.avg <- s23s2p3$grade.tier
+f22s1p1$tier.avg <- f22s1p1$grade.tier
+f22s2p1$tier.avg <- (as.double(as.character(f22s2p1$grade.tier)) + as.double(as.character(f22s2p1$j.effect.tier)))/2
+f22s3p1$tier.avg <- (as.double(as.character(f22s3p1$grade.tier)) + as.double(as.character(f22s3p1$j.effect.tier)))/2
+
+# -----------------
 # MAKE BIG STUDENT TABLE
 
 ## Column cleaning
@@ -52,15 +106,15 @@ f22s1p1$j.only <- NA
 f22s1p1$j.grade <- NA
 
 ## Select Relevant Columns
-s23s1p1 <- s23s1p1[,c("key","mcq.only","mcq.grade","j.only","j.grade","grade","new.grade")]
-s23s1p2 <- s23s1p2[,c("key","mcq.only","mcq.grade","j.only","j.grade","grade","new.grade")]
-s23s1p3 <- s23s1p3[,c("key","mcq.only","mcq.grade","j.only","j.grade","grade","new.grade")]
-s23s2p1 <- s23s2p1[,c("key","mcq.only","mcq.grade","j.only","j.grade","grade","new.grade")]
-s23s2p2 <- s23s2p2[,c("key","mcq.only","mcq.grade","j.only","j.grade","grade","new.grade")]
-s23s2p3 <- s23s2p3[,c("key","mcq.only","mcq.grade","j.only","j.grade","grade","new.grade")]
-f22s1p1 <- f22s1p1[,c("key","mcq.only","mcq.grade","j.only","j.grade","grade","new.grade")]
-f22s2p1 <- f22s2p1[,c("key","mcq.only","mcq.grade","j.only","j.grade","grade","new.grade")]
-f22s3p1 <- f22s3p1[,c("key","mcq.only","mcq.grade","j.only","j.grade","grade","new.grade")]
+s23s1p1 <- s23s1p1[,c("key","mcq.only","mcq.grade","j.only","j.grade","grade","new.grade", "grade.tier", "j.effect.tier", "tier.avg")]
+s23s1p2 <- s23s1p2[,c("key","mcq.only","mcq.grade","j.only","j.grade","grade","new.grade", "grade.tier", "j.effect.tier", "tier.avg")]
+s23s1p3 <- s23s1p3[,c("key","mcq.only","mcq.grade","j.only","j.grade","grade","new.grade", "grade.tier", "j.effect.tier", "tier.avg")]
+s23s2p1 <- s23s2p1[,c("key","mcq.only","mcq.grade","j.only","j.grade","grade","new.grade", "grade.tier", "j.effect.tier", "tier.avg")]
+s23s2p2 <- s23s2p2[,c("key","mcq.only","mcq.grade","j.only","j.grade","grade","new.grade", "grade.tier", "j.effect.tier", "tier.avg")]
+s23s2p3 <- s23s2p3[,c("key","mcq.only","mcq.grade","j.only","j.grade","grade","new.grade", "grade.tier", "j.effect.tier", "tier.avg")]
+f22s1p1 <- f22s1p1[,c("key","mcq.only","mcq.grade","j.only","j.grade","grade","new.grade", "grade.tier", "j.effect.tier", "tier.avg")]
+f22s2p1 <- f22s2p1[,c("key","mcq.only","mcq.grade","j.only","j.grade","grade","new.grade", "grade.tier", "j.effect.tier", "tier.avg")]
+f22s3p1 <- f22s3p1[,c("key","mcq.only","mcq.grade","j.only","j.grade","grade","new.grade", "grade.tier", "j.effect.tier", "tier.avg")]
 
 ## Add Meta Columns
 s23s1p1$semester <- "S23"
@@ -119,7 +173,7 @@ students <- rbind(s23s1p1, s23s1p2, s23s1p3, s23s2p1, s23s2p2, s23s2p3, f22s1p1,
 ## Add j-effect to student table
 calc_jeffect <- function(df) {
   
-  df$j.effect <- 100 * (df$grade - df$mcq.grade) / df$mcq.grade
+  df$j.effect <- df$grade - df$mcq.grade
   
   return(df)
 }
@@ -130,12 +184,14 @@ students <- calc_jeffect(students)
 calc_gain <- function(df){
   
   df$p.gain <- 100*(df$new.grade - df$grade)/df$grade
-  
+
   return(df)
   
 }
 
 students <- calc_gain(students)
+
+
 
 ## Save big student table 
 write.csv(students, "student-table.csv")
