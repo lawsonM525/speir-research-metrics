@@ -1,0 +1,3 @@
+"Column","Mean","Median","StdDev","P_Value","Normal","Wilcoxon_P_Value"
+"jsec_22_mcq_grades",81.9051020408163,86.67,14.0758389510846,0.000103646207500825,"Not Normal",0.069865491664481
+"jsec_23_p2_mcq_grades",75.25,80,16.5876719906371,0.0123130251687152,"Not Normal",0.069865491664481
