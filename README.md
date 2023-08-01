@@ -23,13 +23,13 @@ This repository contains several scripts and datasets used for analyzing student
    - `boxplots-tiers.R`
    - `boxplots.R`
    - `separate-j-points.R`: Made to separate mcq and jsutification points for a given partial
-         - J-gains for S23 are computedin here (not for the big student table though)
-         - For big student table, j-gains are computed directly inside the big student table script
+    - J-gains for S23 are computedin here (not for the big student table though)
+    - For big student table, j-gains are computed directly inside the big student table script
    - `f22-separate-j-points.R`
    - `f22_surveys.R`
    - `f22_tier_scores.R`
    - `new-gains.R`: Made to compute bonus gains
-         - Only used in Spring 23 (in Big tables the function is directly in the main script)
+    - Only used in Spring 23 (in Big tables the function is directly in the main script)
    - `summary-tables.R`
    - `survey_data_cleaning.R`
    - `tier_scores.R`
